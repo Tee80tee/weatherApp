@@ -1,0 +1,120 @@
+html {
+    min-height: 100vh
+}
+
+body {
+    background: linear-gradient(#FFD966 55%, #FFF2CA);
+    margin: auto;
+}
+
+.block1 {
+    width: 100%;
+    height: 20vh;
+    padding: 2%;
+}
+
+.search-icon {
+    color: white;
+    width: 50px;
+    font-size: 3vw;
+    position: relative;
+    float: right;
+    margin-top: 2%;
+    margin-right: 2%;
+    transition: font-size 0.3s;
+}
+
+.search-icon:hover {
+    color:#fcf9f8;
+    font-size: 4vw;
+    cursor: pointer;
+}
+
+.block2{
+    width: 100%;
+    text-align : center;
+    color: white;
+}
+
+.weather-status{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 4vw;
+    margin-bottom: 5px;
+}
+
+.current-city{
+    text-transform: uppercase;
+    font-size: 3vw;
+    margin-bottom: 5px;
+}
+
+.current-country{
+    font-size: 2.5vw;
+    margin-bottom: 9vh;
+    font-weight: lighter;
+}
+
+.day0{
+    transition: font-size 0.3s;
+}
+
+.main-card-hover {
+    font-size: larger;
+}
+
+.card-text{
+    width: 100%;
+}
+
+.card-body{
+    text-align: center;
+    color: white;
+}
+
+.card{
+    background-color: rgba(0,0,0,0);
+    border: 0;
+}
+
+.day{
+    color: white;
+    font-size: 1.4vw;
+}
+
+.weather-icon{
+    color: white;
+    font-size: 3vw;
+    --fa-animation-duration: 10s
+}
+
+.fa-beat{
+    --fa-animation-duration: 3s;
+    --fa-beat-scale: 1.2;
+}
+
+.temp-num{
+    font-size: 3vw;
+    font-weight: normal;
+    cursor: pointer;
+    width: 30%;
+    margin: 0 auto;
+    color: #FFD700;
+    background-color: white;
+    border-radius: 60px;
+    transition: font-size 0.3s ease-in, width 0.3s ease-in;
+}
+
+.temp-num:hover{
+    font-size: 4vw;
+    color: #FFD700;
+    width: 40%;
+    transition: font-size 0.3s ease-in, width 0.3s ease-in;
+}
+
+.footer-space{
+    width: 100%;
+    height: 10vh;
+}
+
+
