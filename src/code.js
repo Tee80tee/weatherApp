@@ -78,13 +78,13 @@ function ChangeCity(response) {
     // set everything to cel unit first
     currentUnit = "fah";
     SwtichTempUnit();
-    
+
     let cityNameElement = document.querySelector("#current-city");
     cityNameElement.innerHTML = response.data.name;
     let currentTempElement = document.querySelector("#day0-temp");
     let responseTemp = response.data.main.temp;
     currentTempElement.innerHTML = Math.round(responseTemp) + "°C";
-    
+
     let currentCountry = document.querySelector("#current-country");
     currentCountry.innerHTML = regionNames.of(response.data.sys.country);
     let weatherStatus = document.querySelector("#weather-status");
@@ -94,7 +94,7 @@ function ChangeCity(response) {
 }
 
 function SetIcon(status, element) {
-    
+
     switch (status)
     {
         case "Thunderstorm":
@@ -110,7 +110,7 @@ function SetIcon(status, element) {
             element.className = "bi bi-cloud-snow-fill";
             break;
         case "Clear":
-            element.className = "bi bi-sun-fill"; 
+            element.className = "bi bi-sun-fill";
             break;
         case "Clouds":
             element.className = "bi bi-clouds-fill";
