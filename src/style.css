@@ -5,6 +5,13 @@ html {
 body {
     background: linear-gradient(#FFD966 55%, #FFF2CA);
     margin: auto;
+    font-family: 'Hind Vadodara', serif;
+    transition: background 0.3s;
+}
+
+.cloudyBG{
+    background: linear-gradient(#c9e1e6 55%, #83bbc6);
+    transition: background 0.3s;
 }
 
 .block1 {
@@ -88,6 +95,12 @@ body {
     --fa-animation-duration: 10s
 }
 
+.wind-num{
+    color: white;
+    font-size: 2vw;
+    margin-top: 1vw;
+}
+
 .fa-beat{
     --fa-animation-duration: 3s;
     --fa-beat-scale: 1.2;
@@ -107,7 +120,6 @@ body {
 
 .temp-num:hover{
     font-size: 4vw;
-    color: #FFD700;
     width: 40%;
     transition: font-size 0.3s ease-in, width 0.3s ease-in;
 }

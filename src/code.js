@@ -63,6 +63,14 @@ function ShowTempOfCurrentLocation(){
     });
 }
 
+function SearchForTempStart() {
+   
+    let finalUrl = apiUrl + "q=" + "Tokyo" + "&appid=" + apiKey + "&units=metric";
+    return axios.get(finalUrl).then(ChangeCity).catch((error) => {
+        console.error({error});
+    });
+}
+
 function SearchForTemp(event) {
     event.preventDefault();
     let firstFormInput = document.querySelector("#city-name-input");
@@ -89,12 +97,16 @@ function ChangeCity(response) {
     currentCountry.innerHTML = regionNames.of(response.data.sys.country);
     let weatherStatus = document.querySelector("#weather-status");
     weatherStatus.innerHTML = response.data.weather[0].description;
+    let windSpeed = document.querySelector("#day0-wind");
+    windSpeed.innerHTML = response.data.wind.speed + " m/s";
+    console.log(response.data.wind.speed);
     let icon = document.querySelector("#day0-icon");
-    SetIcon(response.data.weather[0].main, icon);
+    SetVisualByStatus(response.data.weather[0].main, icon);
 }
 
-function SetIcon(status, element) {
+let bodyElement = document.querySelector("body");
 
+function SetVisualByStatus(status, element) {
     switch (status)
     {
         case "Thunderstorm":
@@ -110,15 +122,27 @@ function SetIcon(status, element) {
             element.className = "bi bi-cloud-snow-fill";
             break;
         case "Clear":
+            bodyElement.className = "body";
+            allTempElements.forEach(function (item){
+                item.style.color = "#FFD966";
+            });
             element.className = "bi bi-sun-fill";
             break;
         case "Clouds":
+            allTempElements.forEach(function (item){
+                item.style.color = "#c9e1e6";
+            });
+            bodyElement.classList.add("cloudyBG");
             element.className = "bi bi-clouds-fill";
             break;
         case "Fog":
             element.className = "bi bi-cloud-fog2-fill";
             break;
         default:
+            bodyElement.className = "body";
+            allTempElements.forEach(function (item){
+                item.style.color = "#FFD966";
+            });
             element.className = "bi bi-cloud-sun-fill";
     }
 }
@@ -182,6 +206,8 @@ mainCard.addEventListener("mouseout", MainCardExit);
 function AddListenerToAllTempElements(item) {
     item.addEventListener("click", SwtichTempUnit);
 }
+
+SearchForTempStart();
 
   
 
