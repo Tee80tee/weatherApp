@@ -9,6 +9,7 @@ function SetLonLat(position) {
     lon = position.coords.longitude;
     lat = position.coords.latitude;
 }
+
 navigator.geolocation.getCurrentPosition(SetLonLat);
 
 // things that set country code
@@ -52,21 +53,23 @@ function SwtichTempUnit() {
 }
 
 // weather api
-let apiKey = "97bed167ec49bff56e6c1b63daef9c86";
-let apiUrl = "https://api.openweathermap.org/data/2.5/weather?";
 
-function ShowTempOfCurrentLocation(){
-    let finalUrl = `${apiUrl}lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+// keys
+let sheCodeApiKey = "0ffebo21c6c8t4beca1e63be9c2e7be3";
+let ninjaApiKey = "JPBT2pFOB6XRKLMTSaoROQ==KdfARqwdyvdq33r8";
 
+let apiUrlForecast = "https://api.shecodes.io/weather/v1/forecast?query=";
+
+function ShowForecast(city) {
+    let finalUrl = apiUrlForecast + city + "&key=" + sheCodeApiKey;
     axios.get(finalUrl).then(ChangeCity).catch((error) => {
         console.error({error});
     });
 }
 
-function SearchForTempStart() {
-   
-    let finalUrl = apiUrl + "q=" + "Tokyo" + "&appid=" + apiKey + "&units=metric";
-    return axios.get(finalUrl).then(ChangeCity).catch((error) => {
+function ShowTempOfCurrentLocation() {
+    let finalUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${lon}&lat=${lat}&key=${sheCodeApiKey}`;
+    axios.get(finalUrl).then(ChangeCity).catch((error) => {
         console.error({error});
     });
 }
@@ -74,73 +77,113 @@ function SearchForTempStart() {
 function SearchForTemp(event) {
     event.preventDefault();
     let firstFormInput = document.querySelector("#city-name-input");
-
-    let finalUrl = apiUrl + "q=" + firstFormInput.value + "&appid=" + apiKey + "&units=metric";
-    return axios.get(finalUrl).then(ChangeCity).catch((error) => {
-        console.error({error});
-    });
+    console.log(firstFormInput.value);
+    ShowForecast(firstFormInput.value);
 }
 
 function ChangeCity(response) {
     console.log(response);
     // set everything to cel unit first
-    currentUnit = "fah";
-    SwtichTempUnit();
+    
+    //currentUnit = "fah";
+    //SwtichTempUnit();
 
     let cityNameElement = document.querySelector("#current-city");
-    cityNameElement.innerHTML = response.data.name;
-    let currentTempElement = document.querySelector("#day0-temp");
-    let responseTemp = response.data.main.temp;
-    currentTempElement.innerHTML = Math.round(responseTemp) + "°C";
+    cityNameElement.innerHTML = response.data.city;
 
     let currentCountry = document.querySelector("#current-country");
-    currentCountry.innerHTML = regionNames.of(response.data.sys.country);
+    currentCountry.innerHTML = response.data.country;
+    
+    let currentTempElement = document.querySelector("#day0-temp");
+    let responseTemp = response.data.daily[0].temperature.day;
+    currentTempElement.innerHTML = Math.round(responseTemp) + "°C";
+
+    let day1TempElement = document.querySelector("#day1-temp");
+    let day1ResponseTemp = response.data.daily[1].temperature.day;
+    day1TempElement.innerHTML = Math.round(day1ResponseTemp) + "°C";
+
+    let day2TempElement = document.querySelector("#day2-temp");
+    let day2ResponseTemp = response.data.daily[2].temperature.day;
+    day2TempElement.innerHTML = Math.round(day2ResponseTemp) + "°C";
+
     let weatherStatus = document.querySelector("#weather-status");
-    weatherStatus.innerHTML = response.data.weather[0].description;
+    weatherStatus.innerHTML = response.data.daily[0].condition.description;
+    
     let windSpeed = document.querySelector("#day0-wind");
-    windSpeed.innerHTML = response.data.wind.speed + " m/s";
-    console.log(response.data.wind.speed);
+    windSpeed.innerHTML = response.data.daily[0].wind.speed + " m/s";
+    let windSpeed1 = document.querySelector("#day1-wind");
+    windSpeed1.innerHTML = response.data.daily[1].wind.speed + " m/s";
+    let windSpeed2 = document.querySelector("#day2-wind");
+    windSpeed2.innerHTML = response.data.daily[2].wind.speed + " m/s";
+    
     let icon = document.querySelector("#day0-icon");
-    SetVisualByStatus(response.data.weather[0].main, icon);
+    SetVisualByStatus(response.data.daily[0].condition.description, icon);
+    let icon1 = document.querySelector("#day1-icon");
+    SetVisualByStatus(response.data.daily[1].condition.description, icon1);
+    let icon2 = document.querySelector("#day2-icon");
+    SetVisualByStatus(response.data.daily[2].condition.description, icon2);
 }
 
 let bodyElement = document.querySelector("body");
 
 function SetVisualByStatus(status, element) {
-    switch (status)
+
+    let category = status.toLowerCase();
+    console.log(category);
+    if (category.includes("rain")) {
+        category = "rain";
+    }
+    else if(category.includes("clouds"))
     {
-        case "Thunderstorm":
+        category = "clouds";
+    }
+
+    switch (category) {
+        case "thunderstorm":
+            allTempElements.forEach(function (item) {
+                item.style.color = "#C2B280";
+            });
+            bodyElement.classList.add("thunderBG");
             element.className = "bi bi-cloud-lightning-rain-fill";
             break;
-        case "Drizzle":
-            element.className = "bi bi-cloud-drizzle-fill";
+        case "mist":
+            allTempElements.forEach(function (item) {
+                item.style.color = "#C2B280";
+            });
+            bodyElement.classList.add("cloudyBG");
+            element.className = "bi bi-cloud-haze-fill";
             break;
-        case "Rain":
+        case "rain":
+            allTempElements.forEach(function (item) {
+                item.style.color = "#B0B0B0";
+            });
+            bodyElement.classList.add("rainBG");
             element.className = "bi bi-cloud-rain-fill";
             break;
-        case "Snow":
+        case "snow":
+            allTempElements.forEach(function (item) {
+                item.style.color = "#BCD4E6";
+            });
+            bodyElement.classList.add("snowBG");
             element.className = "bi bi-cloud-snow-fill";
             break;
-        case "Clear":
+        case "clear sky":
             bodyElement.className = "body";
-            allTempElements.forEach(function (item){
+            allTempElements.forEach(function (item) {
                 item.style.color = "#FFD966";
             });
             element.className = "bi bi-sun-fill";
             break;
-        case "Clouds":
-            allTempElements.forEach(function (item){
+        case "clouds":
+            allTempElements.forEach(function (item) {
                 item.style.color = "#c9e1e6";
             });
             bodyElement.classList.add("cloudyBG");
             element.className = "bi bi-clouds-fill";
             break;
-        case "Fog":
-            element.className = "bi bi-cloud-fog2-fill";
-            break;
         default:
             bodyElement.className = "body";
-            allTempElements.forEach(function (item){
+            allTempElements.forEach(function (item) {
                 item.style.color = "#FFD966";
             });
             element.className = "bi bi-cloud-sun-fill";
@@ -159,12 +202,34 @@ function FindNextDay(currentDayNum) {
     }
 }
 
+// get time based on city
+function GetCurrentTime(city) {
+    let finalUrl = "https://api.api-ninjas.com/v1/worldtime?city=";
+    finalUrl = finalUrl+""+city;
+    
+    axios.get(finalUrl, {
+        headers: {
+            'X-Api-Key': ninjaApiKey
+        }
+    }).then(ChangeTime).catch((error) => {
+        console.error({error});
+    });
+}
+
+function ChangeTime(response) {
+    // set time of now
+    let day0 = document.querySelector("#day0");
+    day0.innerHTML = response.data.hour + ":" + response.data.minute + "<br/>Now";
+}
+
 let weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 let now = new Date();
 
-// set time of now
-let day0 = document.querySelector("#day0");
-day0.innerHTML = now.getUTCHours() + ":" + now.getUTCMinutes() + "<br/>Now";
+// set time of start place
+GetCurrentTime("Bangkok");
+
+// set start place
+ShowForecast("Bangkok");
 
 // set days on card
 let nextDay = weekday[FindNextDay(now.getDay())];
@@ -206,8 +271,4 @@ mainCard.addEventListener("mouseout", MainCardExit);
 function AddListenerToAllTempElements(item) {
     item.addEventListener("click", SwtichTempUnit);
 }
-
-SearchForTempStart();
-
-  
 
