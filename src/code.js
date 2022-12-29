@@ -87,6 +87,7 @@ function ChangeCity(response) {
     
     //currentUnit = "fah";
     //SwtichTempUnit();
+    GetCurrentTime(response.data.city);
 
     let cityNameElement = document.querySelector("#current-city");
     cityNameElement.innerHTML = response.data.city;
