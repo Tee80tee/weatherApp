@@ -61,6 +61,8 @@ let ninjaApiKey = "JPBT2pFOB6XRKLMTSaoROQ==KdfARqwdyvdq33r8";
 let apiUrlForecast = "https://api.shecodes.io/weather/v1/forecast?query=";
 
 function ShowForecast(city) {
+    document.querySelector("#spinner").style.visibility = 'visible';
+    console.log("hide it");
     let finalUrl = apiUrlForecast + city + "&key=" + sheCodeApiKey;
     axios.get(finalUrl).then(ChangeCity).catch((error) => {
         console.error({error});
@@ -68,6 +70,8 @@ function ShowForecast(city) {
 }
 
 function ShowTempOfCurrentLocation() {
+    document.querySelector("#spinner").style.visibility = 'visible';
+    console.log("hide it");
     let finalUrl = `https://api.shecodes.io/weather/v1/forecast?lon=${lon}&lat=${lat}&key=${sheCodeApiKey}`;
     axios.get(finalUrl).then(ChangeCity).catch((error) => {
         console.error({error});
@@ -117,12 +121,16 @@ function ChangeCity(response) {
     let windSpeed2 = document.querySelector("#day2-wind");
     windSpeed2.innerHTML = response.data.daily[2].wind.speed + " m/s";
     
-    let icon = document.querySelector("#day0-icon");
-    SetVisualByStatus(response.data.daily[0].condition.description, icon);
     let icon1 = document.querySelector("#day1-icon");
     SetVisualByStatus(response.data.daily[1].condition.description, icon1);
     let icon2 = document.querySelector("#day2-icon");
     SetVisualByStatus(response.data.daily[2].condition.description, icon2);
+
+    let icon = document.querySelector("#day0-icon");
+    SetVisualByStatus(response.data.daily[0].condition.description, icon);
+
+    document.querySelector("#spinner").style.visibility = 'hidden';
+    console.log("show it");
 }
 
 let bodyElement = document.querySelector("body");
